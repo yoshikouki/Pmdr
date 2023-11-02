@@ -1,5 +1,5 @@
 {
-  "name": "pmdr",
+  "name": "@pmdr/app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -11,17 +11,24 @@
   "dependencies": {
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.0.1"
+    "next": "14.0.1",
+    "@pmdr/core": "workspace:*"
   },
   "devDependencies": {
-    "typescript": "^5",
-    "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
     "postcss": "^8",
     "tailwindcss": "^3.3.0",
     "eslint": "^8",
-    "eslint-config-next": "14.0.1"
-  }
+    "eslint-config-next": "14.0.1",
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5",
+    "@types/node": "^20"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }
