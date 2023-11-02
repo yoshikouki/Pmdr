@@ -1,15 +1,9 @@
 "use client";
 
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
-import { AudioManager } from "./AudioManager";
 import { TimerControls } from "./TimerControls";
 import { TimerDisplay } from "./TimerDisplay";
-import { TimerSettings } from "./TimerSettings";
 
-export type TimerSettingsProps = {
-  minutes: number;
-  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
-};
 export type AudioManagerProps = {
   audioFile: string;
   isFinished: boolean;
@@ -17,6 +11,7 @@ export type AudioManagerProps = {
 export type TimerDisplayProps = {
   minutes: number;
   seconds: number;
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
 };
 export type TimerControlsProps = {
   isActive: boolean;
@@ -46,9 +41,15 @@ export const Timer = () => {
   };
 
   const handleChangeTime = (event: ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setMinutes(parseInt(value) || 0);
-    setSeconds(0);
+    if (event.target.name === "minutes") {
+      const value = parseInt(event.target.value) || 0;
+      setMinutes(value);
+    } else if (event.target.name === "seconds") {
+      const value = parseInt(event.target.value.slice(1, 3)) || 0;
+      setSeconds(value);
+    } else {
+      handleReset();
+    }
   };
 
   const handleFinish = useCallback(() => {
@@ -78,22 +79,16 @@ export const Timer = () => {
 
   return (
     <div className="rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30">
-      <TimerSettings minutes={minutes} onChange={handleChangeTime} />
-      <TimerDisplay minutes={minutes} seconds={seconds} />
+      <TimerDisplay
+        minutes={minutes}
+        seconds={seconds}
+        onChange={handleChangeTime}
+      />
       <TimerControls
         isActive={isActive}
         onStartStop={handleStartStop}
         onReset={handleReset}
       />
-      <AudioManager
-        isFinished={minutes === 0 && seconds === 0}
-        audioFile={audioFile}
-      />
-
-      <h2 className={`mb-3 text-2xl font-black`}>25:00</h2>
-      <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-        Find in-depth information about Next.js features and API.
-      </p>
     </div>
   );
 };
