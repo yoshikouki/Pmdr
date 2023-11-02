@@ -8,7 +8,7 @@ export const TimerDisplay = ({
   const secondsString = seconds.toString().padStart(2, "0");
 
   return (
-    <h2 className={`mb-3 text-2xl font-black`}>
+    <h2 className={`mb-3 text-8xl font-black w-screen`}>
       <span className="overflow-visible">
         <input
           type="string"
@@ -16,7 +16,7 @@ export const TimerDisplay = ({
           value={minutes}
           onChange={onChange}
           className="min-w-10 bg-transparent outline-none text-right whitespace-nowrap"
-          style={{ width: `${minutes.toString().length}rem` }}
+          style={{ width: `${minutes.toString().length * 4}rem` }}
         />
         :
         <input
@@ -25,7 +25,7 @@ export const TimerDisplay = ({
           value={secondsString}
           onChange={onChange}
           className="bg-transparent outline-none text-left"
-          style={{ width: `${secondsString.length}rem` }}
+          style={{ width: `${secondsString.length * 4}rem` }}
         />
       </span>
     </h2>
