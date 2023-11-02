@@ -1,39 +1,41 @@
+import { Timer } from "..";
+
 export interface TimerInterface {
-  start(): void;
-  stop(): void;
+  duration: number;
+  onStart(): void;
+  onStop(): void;
+  onFinish(): void;
 }
 
-export type TimerConfig = {
-  timer: TimerInterface;
-  callback: () => void;
-};
-
 export class Pmdr {
-  private queue: TimerConfig[];
-  private currentTimer: TimerInterface | null = null;
+  private queue: Timer[];
+  public currentTimer: Timer | null = null;
 
   constructor() {
     this.queue = [];
   }
 
-  // タイマーをキューに追加
-  addTimer(timer: TimerInterface, callback: () => void): void {
-    this.queue.push({ timer, callback });
+  queueForTimer(timer: TimerInterface): Pmdr {
+    this.queue.push(new Timer(timer));
+    return this;
   }
 
-  // タイマーを開始
-  start(): void {
+  startTimer(): Pmdr {
     if (this.queue.length === 0 || this.currentTimer) return;
 
-    const { timer, callback } = this.queue.shift()!;
+    const timer = this.queue.shift()!;
     this.currentTimer = timer;
     this.currentTimer.start();
-    callback();
+    return this;
   }
 
-  // 現在のタイマーを停止
-  stop(): void {
+  stopTimer(): void {
     this.currentTimer?.stop();
+    this.currentTimer = null;
+  }
+
+  finish(): void {
+    this.currentTimer?.finish();
     this.currentTimer = null;
   }
 }

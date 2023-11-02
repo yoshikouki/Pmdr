@@ -1,5 +1,6 @@
 "use client";
 
+import { usePmdr } from "@/hooks/usePmdr";
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { TimerControls } from "./TimerControls";
 import { TimerDisplay } from "./TimerDisplay";
@@ -24,16 +25,19 @@ export const Timer = () => {
   const [seconds, setSeconds] = useState(0);
   const [isActive, setIsActive] = useState(false);
   const [startTime, setStartTime] = useState<number>(0);
+  const { start, stop } = usePmdr();
 
   const audioFile = useMemo(() => {
     return "se/decide.mp3";
   }, []);
 
   const handleStartStop = () => {
+    start();
     setIsActive(!isActive);
   };
 
   const handleReset = () => {
+    stop();
     setIsActive(false);
     setMinutes(25);
     setSeconds(0);

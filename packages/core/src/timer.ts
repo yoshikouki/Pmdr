@@ -1,28 +1,40 @@
 import { TimerInterface } from "./pmdr";
 
-export class Timer implements TimerInterface {
-  private duration: number;
-  private callback: () => void;
-  private currentTimeout: NodeJS.Timeout | null = null;
+export class Timer {
+  public duration: number;
+  public currentTimeout?: NodeJS.Timeout;
+  private onStart: () => void;
+  private onStop: () => void;
+  private onFinish: () => void;
 
-  constructor(duration: number, callback: () => void) {
+  constructor({ duration, onStart, onStop, onFinish }: TimerInterface) {
     this.duration = duration;
-    this.callback = callback;
+    this.onStart = onStart;
+    this.onStop = onStop;
+    this.onFinish = onFinish;
   }
 
   start(): void {
-    if (this.currentTimeout) return;
+    if (this.currentTimeout) {
+      throw new Error("Timer is already running");
+    }
 
-    this.currentTimeout = setTimeout(() => {
-      this.callback();
-      this.currentTimeout = null;
-    }, this.duration);
+    this.currentTimeout = setTimeout(() => this.finish(), this.duration);
+    this.onStart();
   }
 
   stop(): void {
-    if (this.currentTimeout) {
-      clearTimeout(this.currentTimeout);
-      this.currentTimeout = null;
-    }
+    this.clear();
+    this.onStop();
+  }
+
+  finish(): void {
+    this.clear();
+    this.onFinish();
+  }
+
+  clear(): void {
+    clearTimeout(this.currentTimeout);
+    this.currentTimeout = undefined;
   }
 }
