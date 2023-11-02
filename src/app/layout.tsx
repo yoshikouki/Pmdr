@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Footer } from "./Footer";
 import "./globals.css";
 import { font } from "./theme";
 
@@ -7,10 +8,17 @@ export const metadata: Metadata = {
   description: "Fantastic Pomodoro Timer",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
-      <body className={font.className}>{children}</body>
+      <body className={font.className}>
+        {children}
+        <Footer />
+      </body>
     </html>
   );
 }
