@@ -20,14 +20,25 @@ export const usePmdr = () => {
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return;
 
+    let currentTimer: NodeJS.Timeout;
     navigator.serviceWorker.register("/sw.js");
     navigator.serviceWorker.addEventListener("message", (event) => {
-      if (event.data === "timerComplete") {
+      if (event.data.action === "startTimer") {
+        const { duration, callback } = event.data;
+        currentTimer = setTimeout(() => {
+          navigator.serviceWorker.controller?.postMessage(callback);
+        }, duration);
+      } else if (event.data.action === "stopTimer") {
+        clearTimeout(currentTimer);
+      } else if (event.data === "timerComplete") {
         pmdr.finish();
       }
     });
+    return () => clearTimeout(currentTimer);
+  }, [pmdr]);
 
-    if (!isRunning) return;
+  useEffect(() => {
+    if (!("serviceWorker" in navigator && isRunning)) return;
 
     navigator.serviceWorker.getRegistration().then((registration) => {
       registration?.active?.postMessage({
@@ -36,7 +47,7 @@ export const usePmdr = () => {
         callback: "timerComplete",
       });
     });
-  }, [isRunning, pmdr]);
+  }, [isRunning]);
 
   const start = () => {
     pmdr.queueForTimer(timer);

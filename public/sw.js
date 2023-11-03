@@ -1,16 +1,15 @@
-let currentTimer;
+self.addEventListener("install", (event) => {
+  console.log("Installing Service Worker...", new Date().toLocaleTimeString());
+  event.waitUntil(() => {
+    console.log("Installed Service Worker.", new Date().toLocaleTimeString());
+  });
+});
 
-self.addEventListener("message", (event) => {
-  if (event.data.action === "startTimer") {
-    const { duration, callback } = event.data;
-    currentTimer = setTimeout(() => {
-      self.clients.matchAll({ includeUncontrolled: true }).then((clients) => {
-        clients.forEach((client) => {
-          client.postMessage(callback);
-        });
-      });
-    }, duration);
-  } else if (event.data.action === "stopTimer") {
-    clearTimeout(currentTimer);
-  }
+self.addEventListener("activate", (event) => {
+  console.log("Activated Service Worker.", new Date().toLocaleTimeString());
+});
+
+self.addEventListener("fetch", (event) => {
+  console.log("Fetching something...", new Date().toLocaleTimeString());
+  return fetch(event.request);
 });
