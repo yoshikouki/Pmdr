@@ -1,26 +1,33 @@
-import { createContext, useEffect, useReducer } from "react";
-import { Pmdr, Timer } from "../../packages/core";
 import { usePmdrContext } from "@/components/Timer/PmdrProvider";
+import { useEffect } from "react";
+import { SetupTimerAttributes } from "../../packages/core";
 
-export const usePmdr = (initialState: Pmdr) => {
+export const usePmdr = () => {
   const context = usePmdrContext();
   if (!context) {
     throw new Error("usePmdr must be used within a PmdrProvider");
   }
-  const { pmdr, dispatch } = context;
-  // const [pmdr, dispatch] = useReducer(timerReducer, initialState);
+  const { pmdr } = context;
 
-  // const duration = 25 * 60 * 1000;
-  const duration = 1000;
-  const timer: Timer = {
-    duration,
-    onStart: () => console.log("Timer started", new Date()),
-    onStop: () => console.log("Timer stopped", new Date()),
-    onFinish: () => {
-      new Audio("/se/decide.mp3").play();
-      console.log("Timer finished", new Date());
+  const timers: SetupTimerAttributes[] = [
+    {
+      label: "Pomodoro Timer",
+      duration: 1000,
+      // duration: 25 * 60 * 1000,
+      // onStart: () => console.log("Timer started", new Date()),
+      // onStop: () => console.log("Timer stopped", new Date()),
+      // onFinish: () => {
+      //   new Audio("/se/decide.mp3").play();
+      //   console.log("Timer finished", new Date());
+      // },
     },
-  };
+    {
+      label: "Short Break",
+      duration: 5 * 60 * 1000,
+    },
+  ];
+
+  pmdr.queueTimers(timers);
 
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return;
@@ -29,39 +36,42 @@ export const usePmdr = (initialState: Pmdr) => {
     navigator.serviceWorker.register("/sw.js");
     navigator.serviceWorker.addEventListener("message", (event) => {
       if (event.data.action === "startTimer") {
-        const { duration, callback } = event.data;
+        const timer = pmdr.getCurrentTimer();
+        const runningTimer = timer.start();
+        console.log(runningTimer);
         currentTimer = setTimeout(() => {
-          navigator.serviceWorker.controller?.postMessage(callback);
-        }, duration);
+          runningTimer.finish();
+          pmdr.startNextTimer();
+        }, timer.interval);
       } else if (event.data.action === "stopTimer") {
         clearTimeout(currentTimer);
-      } else if (event.data === "timerComplete") {
-        pmdr.finish();
       }
     });
     return () => clearTimeout(currentTimer);
-  }, [pmdr]);
+  }, []);
 
-  useEffect(() => {
-    if (!("serviceWorker" in navigator && isRunning)) return;
+  const onStart = () => {
+    const timer = pmdr.getCurrentTimer();
+    console.log(timer);
+    const runningTimer = timer.start();
+    const interval = setInterval(() => {
+      runningTimer.finish();
+      pmdr.startNextTimer();
+      if (!pmdr.hasNextTimer()) {
+        clearInterval(interval);
+      }
+    }, timer.interval);
+    if (!("serviceWorker" in navigator)) return;
 
     navigator.serviceWorker.getRegistration().then((registration) => {
       registration?.active?.postMessage({
         action: "startTimer",
-        duration,
-        callback: "timerComplete",
+        callbackMessage: "timerComplete",
       });
     });
-  }, [isRunning]);
-
-  const start = () => {
-    pmdr.queueForTimer(timer);
-    pmdr.startTimer();
-    setIsRunning(true);
   };
 
-  const stop = () => {
-    setIsRunning(false);
+  const onStop = () => {
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.controller?.postMessage({
         action: "stopTimer",
@@ -69,5 +79,11 @@ export const usePmdr = (initialState: Pmdr) => {
     }
   };
 
-  return { start, stop };
+  return {
+    onStart,
+    onStop,
+    onReset: pmdr.resetAllTimer,
+    isRunning: pmdr.getState() === "Running",
+    timers: pmdr.sequentialTimers,
+  };
 };

@@ -1,3 +1,4 @@
+import { PmdrProvider } from "@/components/Timer/PmdrProvider";
 import type { Metadata } from "next";
 import { Footer } from "./Footer";
 import "./globals.css";
@@ -16,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={font.className}>
-        {children}
+        <PmdrProvider>{children}</PmdrProvider>
         <Footer />
       </body>
     </html>

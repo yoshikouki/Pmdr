@@ -93,4 +93,4 @@ export const initializeTimerSet = (timers?: SetupTimerAttributes[]): Pmdr => {
   };
 };
 
-export const initializePmdr: () => Pmdr = initializeTimerSet;
+export const initializePmdr = initializeTimerSet;

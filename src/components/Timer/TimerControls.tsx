@@ -1,13 +1,16 @@
-import { TimerControlsProps } from ".";
+import { usePmdr } from "@/hooks/usePmdr";
 
-export const TimerControls = ({
-  isActive,
-  onStartStop,
-  onReset,
-}: TimerControlsProps) => {
+export const TimerControls = () => {
+  const { onStart, onStop, onReset, isRunning } = usePmdr();
+
   return (
     <div className="flex w-full items-end justify-center gap-4">
-      <button onClick={onStartStop}>{isActive ? "Stop" : "Start"}</button>
+      {isRunning ? (
+        <button onClick={onStop}>Stop</button>
+      ) : (
+        <button onClick={onStart}>Start</button>
+      )}
+
       <button onClick={onReset}>Reset</button>
     </div>
   );

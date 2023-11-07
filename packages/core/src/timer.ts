@@ -1,3 +1,5 @@
+import { Alarm, SetupAlarmAttributes, createAlarm } from "./alarm";
+
 export type TimerState = "Ready" | "Running" | "Paused" | "Finished" | "Reset";
 
 export type Timer =
@@ -15,14 +17,20 @@ export type TimerAttributes =
   | ResetTimerAttributes;
 
 export type SetupTimerAttributes = {
-  label: string;
   duration: number;
+  label?: string;
   interval?: number;
-  alarm?: Alarm;
+  alarm?: SetupAlarmAttributes;
 };
 
+type BaseTimerAttributes = {
+  duration: number;
+  label?: string;
+  interval: number;
+  alarm: Alarm;
+};
 type BaseTimerMethods = {
-  start: () => void;
+  start: () => RunningTimer;
   getRemainingDuration: () => number;
   isReady(): boolean;
   isRunning(): boolean;
@@ -31,59 +39,52 @@ type BaseTimerMethods = {
   isReset(): boolean;
 };
 
-type ReadyTimerAttributes = SetupTimerAttributes & {
+type ReadyTimerAttributes = BaseTimerAttributes & {
   state: "Ready";
 };
 type ReadyTimerMethods = BaseTimerMethods;
 export type ReadyTimer = ReadyTimerAttributes & ReadyTimerMethods;
 
-type RunningTimerAttributes = SetupTimerAttributes & {
+type RunningTimerAttributes = BaseTimerAttributes & {
   state: "Running";
   startTime: Date;
   endTime: Date;
   pauseIntervals: PauseInterval[];
 };
 type RunningTimerMethods = BaseTimerMethods & {
-  pause: () => void;
-  reset: () => void;
-  finish: () => void;
+  pause: () => PausedTimer;
+  reset: () => ResetTimer;
+  finish: () => FinishedTimer;
 };
 export type RunningTimer = RunningTimerAttributes & RunningTimerMethods;
 
-type PausedTimerAttributes = SetupTimerAttributes & {
+type PausedTimerAttributes = BaseTimerAttributes & {
   state: "Paused";
   startTime: Date;
   pauseIntervals: PauseInterval[];
 };
 type PausedTimerMethods = BaseTimerMethods & {
-  resume: () => void;
-  reset: () => void;
+  resume: () => RunningTimer;
+  reset: () => ResetTimer;
 };
 export type PausedTimer = PausedTimerAttributes & PausedTimerMethods;
 
-type FinishedTimerAttributes = SetupTimerAttributes & {
+type FinishedTimerAttributes = BaseTimerAttributes & {
   state: "Finished";
   startTime: Date;
   endTime: Date;
   pauseIntervals: PauseInterval[];
 };
 type FinishedTimerMethods = BaseTimerMethods & {
-  reset: () => void;
+  reset: () => ResetTimer;
 };
 export type FinishedTimer = FinishedTimerAttributes & FinishedTimerMethods;
 
-type ResetTimerAttributes = SetupTimerAttributes & {
+type ResetTimerAttributes = BaseTimerAttributes & {
   state: "Reset";
 };
 type ResetTimerMethods = BaseTimerMethods;
 export type ResetTimer = ResetTimerAttributes & ResetTimerMethods;
-
-export type Alarm = {
-  sound: string;
-  vibration: boolean;
-  message: string;
-  run: () => void;
-};
 
 export type PauseInterval = {
   pauseTime: Date;
@@ -114,6 +115,7 @@ const startTimer = (attr: TimerAttributes): RunningTimer => {
 };
 
 const finishTimer = (attr: RunningTimerAttributes): FinishedTimer => {
+  attr.alarm.run();
   const finishedTimerAttributes: FinishedTimerAttributes = {
     ...attr,
     state: "Finished",
@@ -252,6 +254,8 @@ export const initializeTimer = (attr: SetupTimerAttributes): ReadyTimer => {
   const readyTimerAttributes: ReadyTimerAttributes = {
     ...attr,
     state: "Ready",
+    interval: attr.interval || 1000,
+    alarm: createAlarm(attr.alarm),
   };
   return {
     ...readyTimerAttributes,
