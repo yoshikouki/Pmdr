@@ -1,18 +1,59 @@
-import { Timer, TimerArguments, TimerState, initializeTimer } from "./timer";
+import {
+  SetupTimerAttributes,
+  Timer,
+  TimerState,
+  initializeTimer,
+} from "./timer";
 
 export type Pmdr = TimerSet;
 
-export type TimerSetState = "Ready" | "Running" | "Paused" | "Finished";
+export type TimerSetState =
+  | "Ready"
+  | "Running"
+  | "Paused"
+  | "Finished"
+  | "RequireTimer";
 
-export interface TimerSet {
+type TimerSetAttributes = {
   sequentialTimers: Timer[];
   currentIndex: number;
+};
+type TimerSetMethods = {
   startNextTimer: () => void;
   resetAllTimer: () => void;
   getCurrentTimer: () => Timer;
   getState: () => TimerSetState;
   hasNextTimer: () => boolean;
-}
+};
+export type TimerSet = TimerSetAttributes & TimerSetMethods;
+
+const startNext = (attr: TimerSetAttributes): Pmdr => {
+  const nextAttr: TimerSetAttributes = {
+    ...attr,
+    currentIndex: hasNextTimer(attr) ? attr.currentIndex + 1 : 0,
+  };
+  const nextTimer = getCurrentTimer(nextAttr);
+  nextTimer.start();
+  return {
+    ...nextAttr,
+    ...generateTimerSetMethods(attr),
+  };
+};
+
+const resetAll = (attr: TimerSetAttributes): Pmdr => {
+  const nextAttr: TimerSetAttributes = {
+    ...attr,
+    currentIndex: 0,
+    sequentialTimers: [],
+  };
+  return {
+    ...nextAttr,
+    ...generateTimerSetMethods(attr),
+  };
+};
+
+const getCurrentTimer = (attr: TimerSetAttributes): Timer =>
+  attr.sequentialTimers[attr.currentIndex];
 
 const stateMapping: Record<TimerState, TimerSetState> = {
   Ready: "Ready",
@@ -22,38 +63,34 @@ const stateMapping: Record<TimerState, TimerSetState> = {
   Finished: "Finished",
 };
 
-export const initializeTimerSet = (timers?: TimerArguments[]): TimerSet => {
-  let sequentialTimers = timers?.map((timer) => initializeTimer(timer)) || [];
-  let currentIndex = 0;
-  const getCurrentTimer = () => sequentialTimers[currentIndex];
-  const getState = () => {
-    const { state } = getCurrentTimer();
-    return stateMapping[state];
-  };
-  const hasNextTimer = () => currentIndex + 1 < sequentialTimers.length;
+const getState = (attr: TimerSetAttributes): TimerSetState => {
+  const timer = getCurrentTimer(attr);
+  return timer ? stateMapping[timer.state] : "RequireTimer";
+};
 
-  const startNext = () => {
-    if (hasNextTimer()) {
-      currentIndex++;
-      const nextTimer = getCurrentTimer();
-      nextTimer.start();
-    } else {
-      currentIndex = 0;
-    }
-  };
+const hasNextTimer = (attr: TimerSetAttributes): boolean =>
+  attr.currentIndex + 1 < attr.sequentialTimers.length;
 
-  const resetAll = () => {
-    currentIndex = 0;
-    sequentialTimers = [];
+const generateTimerSetMethods = (attr: TimerSetAttributes): TimerSetMethods => {
+  return {
+    startNextTimer: () => startNext(attr),
+    resetAllTimer: () => resetAll(attr),
+    getCurrentTimer: () => getCurrentTimer(attr),
+    getState: () => getState(attr),
+    hasNextTimer: () => hasNextTimer(attr),
+  };
+};
+
+export const initializeTimerSet = (timers?: SetupTimerAttributes[]): Pmdr => {
+  const attr: TimerSetAttributes = {
+    sequentialTimers: timers?.map((timer) => initializeTimer(timer)) ?? [],
+    currentIndex: 0,
   };
 
   return {
-    sequentialTimers,
-    currentIndex,
-    startNextTimer: startNext,
-    resetAllTimer: resetAll,
-    getCurrentTimer,
-    getState,
-    hasNextTimer,
+    ...attr,
+    ...generateTimerSetMethods(attr),
   };
 };
+
+export const initializePmdr: () => Pmdr = initializeTimerSet;
