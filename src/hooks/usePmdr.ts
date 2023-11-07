@@ -1,13 +1,18 @@
-import { useEffect, useMemo, useState } from "react";
-import { Pmdr, TimerInterface } from "../../packages/core";
+import { createContext, useEffect, useReducer } from "react";
+import { Pmdr, Timer } from "../../packages/core";
+import { usePmdrContext } from "@/components/Timer/PmdrProvider";
 
-export const usePmdr = () => {
-  const [isRunning, setIsRunning] = useState(false);
-  const pmdr = useMemo(() => new Pmdr(), []);
+export const usePmdr = (initialState: Pmdr) => {
+  const context = usePmdrContext();
+  if (!context) {
+    throw new Error("usePmdr must be used within a PmdrProvider");
+  }
+  const { pmdr, dispatch } = context;
+  // const [pmdr, dispatch] = useReducer(timerReducer, initialState);
 
   // const duration = 25 * 60 * 1000;
   const duration = 1000;
-  const timer: TimerInterface = {
+  const timer: Timer = {
     duration,
     onStart: () => console.log("Timer started", new Date()),
     onStop: () => console.log("Timer stopped", new Date()),

@@ -1,41 +1,59 @@
-import { Timer } from "..";
+import { Timer, TimerArguments, TimerState, initializeTimer } from "./timer";
 
-export interface TimerInterface {
-  duration: number;
-  onStart(): void;
-  onStop(): void;
-  onFinish(): void;
+export type Pmdr = TimerSet;
+
+export type TimerSetState = "Ready" | "Running" | "Paused" | "Finished";
+
+export interface TimerSet {
+  sequentialTimers: Timer[];
+  currentIndex: number;
+  startNextTimer: () => void;
+  resetAllTimer: () => void;
+  getCurrentTimer: () => Timer;
+  getState: () => TimerSetState;
+  hasNextTimer: () => boolean;
 }
 
-export class Pmdr {
-  private queue: Timer[];
-  public currentTimer: Timer | null = null;
+const stateMapping: Record<TimerState, TimerSetState> = {
+  Ready: "Ready",
+  Reset: "Ready",
+  Running: "Running",
+  Paused: "Paused",
+  Finished: "Finished",
+};
 
-  constructor() {
-    this.queue = [];
-  }
+export const initializeTimerSet = (timers?: TimerArguments[]): TimerSet => {
+  let sequentialTimers = timers?.map((timer) => initializeTimer(timer)) || [];
+  let currentIndex = 0;
+  const getCurrentTimer = () => sequentialTimers[currentIndex];
+  const getState = () => {
+    const { state } = getCurrentTimer();
+    return stateMapping[state];
+  };
+  const hasNextTimer = () => currentIndex + 1 < sequentialTimers.length;
 
-  queueForTimer(timer: TimerInterface): Pmdr {
-    this.queue.push(new Timer(timer));
-    return this;
-  }
+  const startNext = () => {
+    if (hasNextTimer()) {
+      currentIndex++;
+      const nextTimer = getCurrentTimer();
+      nextTimer.start();
+    } else {
+      currentIndex = 0;
+    }
+  };
 
-  startTimer(): Pmdr {
-    if (this.queue.length === 0 || this.currentTimer) return;
+  const resetAll = () => {
+    currentIndex = 0;
+    sequentialTimers = [];
+  };
 
-    const timer = this.queue.shift()!;
-    this.currentTimer = timer;
-    this.currentTimer.start();
-    return this;
-  }
-
-  stopTimer(): void {
-    this.currentTimer?.stop();
-    this.currentTimer = null;
-  }
-
-  finish(): void {
-    this.currentTimer?.finish();
-    this.currentTimer = null;
-  }
-}
+  return {
+    sequentialTimers,
+    currentIndex,
+    startNextTimer: startNext,
+    resetAllTimer: resetAll,
+    getCurrentTimer,
+    getState,
+    hasNextTimer,
+  };
+};
