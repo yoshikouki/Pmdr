@@ -31,9 +31,13 @@ export const TimerDisplay = () => {
               type="string"
               name="seconds"
               value={timer.duration / 1000}
-              // onChange={timer.onChangeDuration}
+              onChange={(event) =>
+                timer.onChangeDuration(Number(event.target.value) * 1000)
+              }
               className="bg-transparent outline-none text-left"
-              style={{ width: `${timer.duration.toString().length * 4}rem` }}
+              style={{
+                width: `${(timer.duration / 1000).toString().length * 4}rem`,
+              }}
             />
           </span>
         </h2>

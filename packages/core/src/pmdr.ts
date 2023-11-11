@@ -1,9 +1,4 @@
-import {
-  SetupTimerAttributes,
-  Timer,
-  TimerState,
-  initializeTimer,
-} from "./timer";
+import { Timer } from "./timer";
 
 export type Pmdr = TimerSet;
 
@@ -83,7 +78,7 @@ const generateTimerSetMethods = (attr: TimerSetAttributes): TimerSetMethods => {
 
 export const initializeTimerSet = (timers?: SetupTimerAttributes[]): Pmdr => {
   const attr: TimerSetAttributes = {
-    sequentialTimers: timers?.map((timer) => initializeTimer(timer)) ?? [],
+    sequentialTimers: [],
     currentIndex: 0,
   };
 
