@@ -21,16 +21,13 @@ export const usePmdr = () => {
   });
 
   const onStart = () => {
-    navigator.serviceWorker.register("/sw.js").then((registration) => {
-      console.log("onStart", new Date().toLocaleTimeString());
-      registration?.active?.postMessage({ action: "startTimer" });
-    });
+    if (!("serviceWorker" in navigator)) return;
+    navigator.serviceWorker.controller?.postMessage({ command: "stopTimer" });
   };
 
   const onStop = () => {
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.controller?.postMessage({ action: "stopTimer" });
-    }
+    if (!("serviceWorker" in navigator)) return;
+    navigator.serviceWorker.controller?.postMessage({ command: "stopTimer" });
   };
 
   return {
