@@ -82,18 +82,19 @@ export const getById = async <T>(
   });
 };
 
-export const updateData = async (
+export const updateData = async <T>(
   objectStoreName: ObjectStoreName,
-  data: unknown
-): Promise<void> => {
+  id: string,
+  data: T
+): Promise<T> => {
   const db = await initIDB();
   const transaction = db.transaction([objectStoreName], "readwrite");
   const store = transaction.objectStore(objectStoreName);
 
   return new Promise((resolve, reject) => {
-    const request = store.put(data);
+    const request = store.put(data, id);
 
-    request.onsuccess = () => resolve();
+    request.onsuccess = () => resolve(data);
     request.onerror = () => reject(`Update data error: ${request.error}`);
   });
 };
