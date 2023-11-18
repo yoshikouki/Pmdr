@@ -3,6 +3,7 @@
 import { Moon, Smartphone, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
+import { cn } from "@/lib/utils";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 
 export function ThemeSelector() {
@@ -17,7 +18,7 @@ export function ThemeSelector() {
       }}
     >
       <ToggleGroupItem
-        className="h-12 w-12"
+        className={cn("h-12 w-12", theme === "light" && "text-primary")}
         value="light"
         aria-label="Change to light theme"
       >
@@ -25,7 +26,7 @@ export function ThemeSelector() {
         <span className="sr-only">Change to light theme</span>
       </ToggleGroupItem>
       <ToggleGroupItem
-        className="h-12 w-12"
+        className={cn("h-12 w-12", theme === "dark" && "text-primary")}
         value="dark"
         aria-label="Change to dark theme"
       >
@@ -33,7 +34,7 @@ export function ThemeSelector() {
         <span className="sr-only">Change to dark theme</span>
       </ToggleGroupItem>
       <ToggleGroupItem
-        className="h-12 w-12"
+        className={cn("h-12 w-12", theme === "system" && "text-primary")}
         value="system"
         aria-label="Change to the theme in the device settings"
       >
