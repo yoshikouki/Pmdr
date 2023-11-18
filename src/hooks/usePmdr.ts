@@ -1,4 +1,4 @@
-import { usePmdrContext } from "@/components/Timer/PmdrProvider";
+import { usePmdrContext } from "@/app/pmdr-provider";
 import { Timer, createTimer } from "@pmdr/core";
 
 export const usePmdr = () => {

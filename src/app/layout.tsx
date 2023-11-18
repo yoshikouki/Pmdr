@@ -1,6 +1,6 @@
-import { PmdrProvider } from "@/components/Timer/PmdrProvider";
+import { PmdrProvider } from "@/app/pmdr-provider";
 import { ThemeProvider } from "@/app/theme-provider";
-import { UserSettingsProvider } from "@/components/user-settings";
+import { UserSettingsProvider } from "@/app/user-settings";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Footer } from "./Footer";
