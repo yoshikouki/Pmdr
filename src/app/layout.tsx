@@ -1,8 +1,9 @@
 import { PmdrProvider } from "@/app/pmdr-provider";
 import { ThemeProvider } from "@/app/theme-provider";
-import { UserSettingsProvider } from "@/app/user-settings";
+import { UserSettingsProvider } from "@/app/user-settings-provider";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
+import { MainNavigation } from "../components/main-navigation";
 import { Footer } from "./Footer";
 import "./globals.css";
 import { font } from "./theme";
@@ -69,7 +70,10 @@ export default function RootLayout({
           )}
         >
           <ThemeProvider>
-            <PmdrProvider>{children}</PmdrProvider>
+            <PmdrProvider>
+              {children}
+              <MainNavigation />
+            </PmdrProvider>
             <Footer />
           </ThemeProvider>
         </body>
