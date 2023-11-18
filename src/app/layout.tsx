@@ -9,6 +9,7 @@ const APP_NAME = "Pmdr";
 const APP_DEFAULT_TITLE = "Pmdr";
 const APP_TITLE_TEMPLATE = "%s - Pmdr";
 const APP_DESCRIPTION = "Fantastic Pomodoro Timer";
+const APP_URL = "https://pmdr.app";
 
 export const metadata: Metadata = {
   applicationName: APP_NAME,
@@ -17,6 +18,7 @@ export const metadata: Metadata = {
     template: APP_TITLE_TEMPLATE,
   },
   description: APP_DESCRIPTION,
+  metadataBase: new URL(APP_URL),
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
