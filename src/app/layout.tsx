@@ -1,4 +1,5 @@
 import { PmdrProvider } from "@/components/Timer/PmdrProvider";
+import { ThemeProvider } from "@/app/theme-provider";
 import { UserSettingsProvider } from "@/components/user-settings";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
@@ -67,8 +68,10 @@ export default function RootLayout({
             font.className
           )}
         >
-          <PmdrProvider>{children}</PmdrProvider>
-          <Footer />
+          <ThemeProvider>
+            <PmdrProvider>{children}</PmdrProvider>
+            <Footer />
+          </ThemeProvider>
         </body>
       </UserSettingsProvider>
     </html>
