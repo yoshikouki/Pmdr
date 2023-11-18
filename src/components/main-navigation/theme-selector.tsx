@@ -16,15 +16,24 @@ export function ThemeSelector() {
         if (value) setTheme(value);
       }}
     >
-      <ToggleGroupItem value="light" aria-label="Change to light theme">
+      <ToggleGroupItem
+        className="h-12 w-12"
+        value="light"
+        aria-label="Change to light theme"
+      >
         <Sun />
         <span className="sr-only">Change to light theme</span>
       </ToggleGroupItem>
-      <ToggleGroupItem value="dark" aria-label="Change to dark theme">
+      <ToggleGroupItem
+        className="h-12 w-12"
+        value="dark"
+        aria-label="Change to dark theme"
+      >
         <Moon />
         <span className="sr-only">Change to dark theme</span>
       </ToggleGroupItem>
       <ToggleGroupItem
+        className="h-12 w-12"
         value="system"
         aria-label="Change to the theme in the device settings"
       >
