@@ -1,5 +1,6 @@
 import { PmdrProvider } from "@/components/Timer/PmdrProvider";
 import { UserSettingsProvider } from "@/components/user-settings";
+import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Footer } from "./Footer";
 import "./globals.css";
@@ -60,7 +61,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <UserSettingsProvider>
-        <body className={font.className}>
+        <body
+          className={cn(
+            "min-h-screen bg-background font-sans antialiased",
+            font.className
+          )}
+        >
           <PmdrProvider>{children}</PmdrProvider>
           <Footer />
         </body>
