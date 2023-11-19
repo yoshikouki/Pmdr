@@ -1,7 +1,11 @@
 import { getById, updateData } from "./indexed-db";
 
 export type UserSettings = {
-  isEnableNotification: boolean;
+  id: string;
+  isNotificationsEnabled: boolean;
+  isWebPushEnabled: boolean;
+  isInAppNotificationsEnabled: boolean;
+};
 };
 
 export const getSettings = async (): Promise<UserSettings> => {
@@ -11,5 +15,6 @@ export const getSettings = async (): Promise<UserSettings> => {
 export const updateSettings = async (
   newSettings: UserSettings
 ): Promise<UserSettings> => {
-  return await updateData("settings", "nonlogin", newSettings);
+  return await updateData("settings", newSettings);
+};
 };

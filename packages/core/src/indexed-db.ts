@@ -50,10 +50,10 @@ export const initIDB = (
   });
 };
 
-export const addData = async (
+export const addData = async <T>(
   objectStoreName: ObjectStoreName,
-  data: unknown
-): Promise<void> => {
+  data: T
+): Promise<T> => {
   const db = await initIDB();
   const transaction = db.transaction([objectStoreName], "readwrite");
   const store = transaction.objectStore(objectStoreName);
@@ -61,7 +61,7 @@ export const addData = async (
   return new Promise((resolve, reject) => {
     const request = store.add(data);
 
-    request.onsuccess = () => resolve();
+    request.onsuccess = () => resolve(data);
     request.onerror = () => reject(`Add data error: ${request.error}`);
   });
 };
@@ -84,7 +84,6 @@ export const getById = async <T>(
 
 export const updateData = async <T>(
   objectStoreName: ObjectStoreName,
-  id: string,
   data: T
 ): Promise<T> => {
   const db = await initIDB();
@@ -92,7 +91,7 @@ export const updateData = async <T>(
   const store = transaction.objectStore(objectStoreName);
 
   return new Promise((resolve, reject) => {
-    const request = store.put(data, id);
+    const request = store.put(data);
 
     request.onsuccess = () => resolve(data);
     request.onerror = () => reject(`Update data error: ${request.error}`);
