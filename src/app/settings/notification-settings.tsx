@@ -14,6 +14,7 @@ import { Switch } from "@/components/ui/switch";
 import { Paragraph } from "@/components/ui/typography";
 import { useUserSettings } from "@/hooks/use-user-settings";
 import { cn } from "@/lib/utils";
+import { UserSettings } from "@pmdr/core/src/setting";
 
 type CardProps = React.ComponentProps<typeof Card>;
 
@@ -22,6 +23,13 @@ export const NotificationSettings: React.FC = ({
   ...props
 }: CardProps) => {
   const { settings, updateSettings } = useUserSettings();
+  const generateOnUpdate =
+    (key: keyof UserSettings) => async (checked: boolean) => {
+      await updateSettings({
+        ...settings,
+        [key]: checked,
+      });
+    };
 
   return (
     <Card className={cn(className)} {...props}>
@@ -38,7 +46,10 @@ export const NotificationSettings: React.FC = ({
               Turn on or off notifications for the entire app.
             </Paragraph>
           </div>
-          <Switch checked={settings?.isNotificationsEnabled} />
+          <Switch
+            checked={settings.isNotificationsEnabled}
+            onCheckedChange={generateOnUpdate("isNotificationsEnabled")}
+          />
         </div>
       </CardContent>
 
@@ -53,7 +64,10 @@ export const NotificationSettings: React.FC = ({
               Get notifications through your web browser.
             </Paragraph>
           </div>
-          <Switch checked={settings?.isWebPushEnabled} />
+          <Switch
+            checked={settings.isWebPushEnabled}
+            onCheckedChange={generateOnUpdate("isWebPushEnabled")}
+          />
         </div>
       </CardContent>
 
@@ -66,7 +80,10 @@ export const NotificationSettings: React.FC = ({
               Receive notifications while using the app.
             </Paragraph>
           </div>
-          <Switch checked={settings?.isInAppNotificationsEnabled} />
+          <Switch
+            checked={settings.isInAppNotificationsEnabled}
+            onCheckedChange={generateOnUpdate("isInAppNotificationsEnabled")}
+          />
         </div>
       </CardContent>
 

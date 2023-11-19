@@ -9,7 +9,7 @@ import {
 import { ReactNode, createContext, useEffect, useState } from "react";
 
 interface UserSettingsContextType {
-  settings: UserSettings | null;
+  settings: UserSettings;
   updateSettings: (newSettings: UserSettings) => Promise<UserSettings>;
 }
 
@@ -19,7 +19,7 @@ export const UserSettingsContext = createContext<UserSettingsContextType>({
 });
 
 export const UserSettingsProvider = ({ children }: { children: ReactNode }) => {
-  const [settings, setSettings] = useState<UserSettings | null>(null);
+  const [settings, setSettings] = useState<UserSettings>(initialSettings);
 
   const value = {
     settings,
