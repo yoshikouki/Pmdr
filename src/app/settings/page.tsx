@@ -8,7 +8,7 @@ export default function SettingsPage() {
       <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mb-10">
         Settings
       </h1>
-      <div className="flex flex-col md:flex-row gap-10">
+      <div className="flex flex-col gap-10 max-w-md">
         <AuthenticationSettings />
         <NotificationSettings />
         <ThemeSettings />
