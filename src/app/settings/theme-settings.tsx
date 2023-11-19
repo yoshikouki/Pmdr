@@ -6,60 +6,54 @@ import { useTheme } from "next-themes";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
 
 export const ThemeSettings: React.FC = () => {
-  const { setTheme, theme } = useTheme();
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>Theme</CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="w-full flex">
-          <ToggleGroup
-            className="w-full justify-between"
-            type="single"
-            value={theme}
-            onValueChange={(value) => {
-              if (value) setTheme(value);
-            }}
+      <CardContent className="w-full flex">
+        <ToggleGroup
+          className="w-full justify-between"
+          type="single"
+          value={mounted ? theme : undefined}
+          onValueChange={(value) => {
+            if (value) setTheme(value);
+          }}
+        >
+          <ToggleGroupItem
+            value="light"
+            className={cn("h-12 flex-grow")}
+            aria-label="Change to light theme"
           >
-            <ToggleGroupItem
-              className={cn(
-                "h-12 flex-grow",
-                theme === "light" && "text-primary"
-              )}
-              value="light"
-              aria-label="Change to light theme"
-            >
-              <Sun className="mr-2" />
-              <span>Light</span>
-            </ToggleGroupItem>
-            <ToggleGroupItem
-              className={cn(
-                "h-12 flex-grow",
-                theme === "dark" && "text-primary"
-              )}
-              value="dark"
-              aria-label="Change to dark theme"
-            >
-              <Moon className="mr-2" />
-              <span>Dark</span>
-            </ToggleGroupItem>
-            <ToggleGroupItem
-              className={cn(
-                "h-12 flex-grow",
-                theme === "system" && "text-primary"
-              )}
-              value="system"
-              aria-label="Change to the theme in the device settings"
-            >
-              <Smartphone className="mr-2" />
-              <span>Device</span>
-            </ToggleGroupItem>
-          </ToggleGroup>
-        </div>
+            <Sun className="mr-2" />
+            <span>Light</span>
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            value="dark"
+            className={cn("h-12 flex-grow")}
+            aria-label="Change to dark theme"
+          >
+            <Moon className="mr-2" />
+            <span>Dark</span>
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            value="system"
+            size="default"
+            variant="default"
+            className={cn("h-12 flex-grow")}
+            aria-label="Change to the theme in the device settings"
+          >
+            <Smartphone className="mr-2" />
+            <span>Device</span>
+          </ToggleGroupItem>
+        </ToggleGroup>
       </CardContent>
     </Card>
   );
