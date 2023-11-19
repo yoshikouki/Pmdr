@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Paragraph } from "@/components/ui/typography";
 
 export const AuthenticationSettings: React.FC = () => {
   return (
@@ -8,10 +9,10 @@ export const AuthenticationSettings: React.FC = () => {
       </CardHeader>
       <CardContent>
         <div className="space-y-2">
-          <p className="font-medium leading-none">Welcome to Instant Mode!</p>
-          <p className="text-muted-foreground">
+          <Paragraph>Welcome to Instant Mode!</Paragraph>
+          <Paragraph variant="muted" size="sm">
             Explore the app&apos;s features with no sign-in required.
-          </p>
+          </Paragraph>
         </div>
       </CardContent>
     </Card>
