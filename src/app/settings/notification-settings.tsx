@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Paragraph } from "@/components/ui/typography";
+import { useUserSettings } from "@/hooks/use-user-settings";
 import { cn } from "@/lib/utils";
 
 type CardProps = React.ComponentProps<typeof Card>;
@@ -20,6 +21,8 @@ export const NotificationSettings: React.FC = ({
   className,
   ...props
 }: CardProps) => {
+  const { settings, updateSettings } = useUserSettings();
+
   return (
     <Card className={cn(className)} {...props}>
       <CardHeader>
@@ -35,7 +38,7 @@ export const NotificationSettings: React.FC = ({
               Turn on or off notifications for the entire app.
             </Paragraph>
           </div>
-          <Switch />
+          <Switch checked={settings?.isNotificationsEnabled} />
         </div>
       </CardContent>
 
@@ -50,7 +53,7 @@ export const NotificationSettings: React.FC = ({
               Get notifications through your web browser.
             </Paragraph>
           </div>
-          <Switch />
+          <Switch checked={settings?.isWebPushEnabled} />
         </div>
       </CardContent>
 
@@ -63,7 +66,7 @@ export const NotificationSettings: React.FC = ({
               Receive notifications while using the app.
             </Paragraph>
           </div>
-          <Switch />
+          <Switch checked={settings?.isInAppNotificationsEnabled} />
         </div>
       </CardContent>
 
