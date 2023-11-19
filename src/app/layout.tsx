@@ -1,11 +1,13 @@
+import type { Metadata } from "next";
+import { cookies } from "next/headers";
+import "./globals.css";
+
 import { PmdrProvider } from "@/app/pmdr-provider";
 import { ThemeProvider } from "@/app/theme-provider";
 import { UserSettingsProvider } from "@/app/user-settings-provider";
 import { cn } from "@/lib/utils";
-import type { Metadata } from "next";
 import { MainNavigation } from "../components/main-navigation";
 import { Footer } from "./Footer";
-import "./globals.css";
 import { font } from "./theme";
 
 const APP_NAME = "Pmdr";
@@ -55,13 +57,21 @@ export const viewport: Viewport = {
   themeColor: "#000000",
 };
 
+const getTheme = () => {
+  const cookieStore = cookies();
+  const themeCookie = cookieStore.get("theme");
+  const theme = themeCookie ? themeCookie.value : "system";
+  return theme;
+};
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const theme = getTheme();
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="theme" style={{ colorScheme: theme }}>
       <UserSettingsProvider>
         <body
           className={cn(

@@ -1,10 +1,10 @@
 "use client";
 
 import { Moon, Smartphone, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
 
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { useTheme } from "@/hooks/use-theme";
 import { cn } from "@/lib/utils";
-import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 
 export function ThemeSelector() {
   const { setTheme, theme } = useTheme();

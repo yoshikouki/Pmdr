@@ -1,10 +1,10 @@
 "use client";
 
 import { Moon, Smartphone, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { useTheme } from "@/hooks/use-theme";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 
