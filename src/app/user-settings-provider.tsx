@@ -2,21 +2,20 @@
 
 import {
   UserSettings,
-  getSettings,
+  initSettings,
+  initialSettings,
   updateSettings,
 } from "@pmdr/core/src/setting";
 import { ReactNode, createContext, useEffect, useState } from "react";
 
 interface UserSettingsContextType {
   settings: UserSettings | null;
-  updateSettings: (newSettings: UserSettings) => Promise<void>;
+  updateSettings: (newSettings: UserSettings) => Promise<UserSettings>;
 }
 
 export const UserSettingsContext = createContext<UserSettingsContextType>({
-  settings: {
-    isEnableNotification: false,
-  },
-  updateSettings: async () => {},
+  settings: initialSettings,
+  updateSettings,
 });
 
 export const UserSettingsProvider = ({ children }: { children: ReactNode }) => {
@@ -27,13 +26,14 @@ export const UserSettingsProvider = ({ children }: { children: ReactNode }) => {
     updateSettings: async (newSettings: UserSettings) => {
       await updateSettings(newSettings);
       setSettings(newSettings);
+      return newSettings;
     },
   };
 
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        const fetchedSettings = await getSettings();
+        const fetchedSettings = await initSettings();
         setSettings(fetchedSettings);
       } catch (error) {
         console.error("Failed to fetch settings:", error);
