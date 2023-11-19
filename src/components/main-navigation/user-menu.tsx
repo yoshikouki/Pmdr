@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { Settings } from "lucide-react";
+import Link from "next/link";
 import { ThemeSelector } from "./theme-selector";
 
 export const UserMenu = () => {
@@ -24,9 +25,11 @@ export const UserMenu = () => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem className="h-12 px-3">
-          <Settings className="mr-2" />
-          Settings
+        <DropdownMenuItem className="h-12 px-3" asChild>
+          <Link href="/settings">
+            <Settings className="mr-2" />
+            Settings
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem className="focus:bg-transparent p-0">
           <ThemeSelector />
