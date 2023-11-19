@@ -15,9 +15,12 @@ export const UserMenu = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-14">
-          <Settings />
-          <span className="sr-only">User Menu</span>
+        <Button
+          variant="ghost"
+          className="h-14 w-full md:text-left md:justify-start"
+        >
+          <Settings className="md:mr-2" />
+          <span className="sr-only md:not-sr-only">User Menu</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
