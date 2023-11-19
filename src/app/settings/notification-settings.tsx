@@ -14,7 +14,6 @@ import { Switch } from "@/components/ui/switch";
 import { Paragraph } from "@/components/ui/typography";
 import { useUserSettings } from "@/hooks/use-user-settings";
 import { cn } from "@/lib/utils";
-import { UserSettings } from "@pmdr/core/src/setting";
 
 type CardProps = React.ComponentProps<typeof Card>;
 
@@ -22,14 +21,7 @@ export const NotificationSettings: React.FC = ({
   className,
   ...props
 }: CardProps) => {
-  const { settings, updateSettings } = useUserSettings();
-  const generateOnUpdate =
-    (key: keyof UserSettings) => async (checked: boolean) => {
-      await updateSettings({
-        ...settings,
-        [key]: checked,
-      });
-    };
+  const { settings, buildSettingChangeHandler } = useUserSettings();
 
   return (
     <Card className={cn(className)} {...props}>
@@ -48,7 +40,9 @@ export const NotificationSettings: React.FC = ({
           </div>
           <Switch
             checked={settings.isNotificationsEnabled}
-            onCheckedChange={generateOnUpdate("isNotificationsEnabled")}
+            onCheckedChange={buildSettingChangeHandler(
+              "isNotificationsEnabled"
+            )}
           />
         </div>
       </CardContent>
@@ -66,7 +60,7 @@ export const NotificationSettings: React.FC = ({
           </div>
           <Switch
             checked={settings.isWebPushEnabled}
-            onCheckedChange={generateOnUpdate("isWebPushEnabled")}
+            onCheckedChange={buildSettingChangeHandler("isWebPushEnabled")}
           />
         </div>
       </CardContent>
@@ -82,7 +76,9 @@ export const NotificationSettings: React.FC = ({
           </div>
           <Switch
             checked={settings.isInAppNotificationsEnabled}
-            onCheckedChange={generateOnUpdate("isInAppNotificationsEnabled")}
+            onCheckedChange={buildSettingChangeHandler(
+              "isInAppNotificationsEnabled"
+            )}
           />
         </div>
       </CardContent>
