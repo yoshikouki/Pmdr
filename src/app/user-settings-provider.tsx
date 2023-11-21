@@ -17,15 +17,11 @@ import {
 interface UserSettingsContextType {
   settings: UserSettings;
   onSettingsUpdate: (newSettings: UserSettings) => Promise<UserSettings>;
-  buildSettingChangeHandler: (
-    key: keyof UserSettings
-  ) => (checked: boolean) => Promise<UserSettings>;
 }
 
 export const UserSettingsContext = createContext<UserSettingsContextType>({
   settings: initialSettings,
   onSettingsUpdate: updateSettings,
-  buildSettingChangeHandler: () => async () => initialSettings,
 });
 
 export const UserSettingsProvider = ({ children }: { children: ReactNode }) => {
@@ -38,16 +34,6 @@ export const UserSettingsProvider = ({ children }: { children: ReactNode }) => {
       return newSettings;
     },
     [setSettings]
-  );
-
-  const buildSettingChangeHandler = useCallback(
-    (key: keyof UserSettings) => async (checked: boolean) => {
-      return await onSettingsUpdate({
-        ...settings,
-        [key]: checked,
-      });
-    },
-    [settings, onSettingsUpdate]
   );
 
   useEffect(() => {
@@ -67,7 +53,6 @@ export const UserSettingsProvider = ({ children }: { children: ReactNode }) => {
       value={{
         settings,
         onSettingsUpdate,
-        buildSettingChangeHandler,
       }}
     >
       {children}

@@ -21,7 +21,7 @@ export const NotificationSettings: React.FC = ({
   className,
   ...props
 }: CardProps) => {
-  const { settings, buildSettingChangeHandler } = useUserSettings();
+  const { settings, onSettingsUpdate } = useUserSettings();
 
   return (
     <Card className={cn(className)} {...props}>
@@ -40,9 +40,12 @@ export const NotificationSettings: React.FC = ({
           </div>
           <Switch
             checked={settings.isNotificationsEnabled}
-            onCheckedChange={buildSettingChangeHandler(
-              "isNotificationsEnabled"
-            )}
+            onCheckedChange={async (checked: boolean) => {
+              await onSettingsUpdate({
+                ...settings,
+                isNotificationsEnabled: checked,
+              });
+            }}
           />
         </div>
       </CardContent>
@@ -60,7 +63,12 @@ export const NotificationSettings: React.FC = ({
           </div>
           <Switch
             checked={settings.isWebPushEnabled}
-            onCheckedChange={buildSettingChangeHandler("isWebPushEnabled")}
+            onCheckedChange={async (checked: boolean) => {
+              await onSettingsUpdate({
+                ...settings,
+                isWebPushEnabled: checked,
+              });
+            }}
           />
         </div>
       </CardContent>
@@ -76,9 +84,12 @@ export const NotificationSettings: React.FC = ({
           </div>
           <Switch
             checked={settings.isInAppNotificationsEnabled}
-            onCheckedChange={buildSettingChangeHandler(
-              "isInAppNotificationsEnabled"
-            )}
+            onCheckedChange={async (checked: boolean) => {
+              await onSettingsUpdate({
+                ...settings,
+                isInAppNotificationsEnabled: checked,
+              });
+            }}
           />
         </div>
       </CardContent>
