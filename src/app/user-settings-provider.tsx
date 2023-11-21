@@ -29,23 +29,23 @@ export const UserSettingsProvider = ({ children }: { children: ReactNode }) => {
 
   const onSettingsUpdate = useCallback(
     async (newSettings: UserSettings) => {
-      await updateSettings(newSettings);
-      setSettings(newSettings);
-      return newSettings;
+      const settings = await updateSettings(newSettings);
+      setSettings(settings);
+      return settings;
     },
     [setSettings]
   );
 
   useEffect(() => {
-    const fetchSettings = async () => {
+    const initializeSettings = async () => {
       try {
-        const fetchedSettings = await initSettings();
-        setSettings(fetchedSettings);
+        const initializedSettings = await initSettings();
+        setSettings(initializedSettings);
       } catch (error) {
         console.error("Failed to fetch settings:", error);
       }
     };
-    fetchSettings();
+    initializeSettings();
   }, []);
 
   return (
