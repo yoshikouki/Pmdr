@@ -50,7 +50,7 @@ const resetAll = (attr: TimerSetAttributes): Pmdr => {
 const getCurrentTimer = (attr: TimerSetAttributes): Timer =>
   attr.sequentialTimers[attr.currentIndex];
 
-const stateMapping: Record<TimerState, TimerSetState> = {
+const stateMapping: Record<string, TimerSetState> = {
   Ready: "Ready",
   Reset: "Ready",
   Running: "Running",
@@ -59,8 +59,9 @@ const stateMapping: Record<TimerState, TimerSetState> = {
 };
 
 const getState = (attr: TimerSetAttributes): TimerSetState => {
-  const timer = getCurrentTimer(attr);
-  return timer ? stateMapping[timer.state] : "RequireTimer";
+  // const timer = getCurrentTimer(attr);
+  // return timer ? stateMapping[timer.state] : "RequireTimer";
+  return "RequireTimer";
 };
 
 const hasNextTimer = (attr: TimerSetAttributes): boolean =>
@@ -76,7 +77,8 @@ const generateTimerSetMethods = (attr: TimerSetAttributes): TimerSetMethods => {
   };
 };
 
-export const initializeTimerSet = (timers?: SetupTimerAttributes[]): Pmdr => {
+// export const initializeTimerSet = (timers?: SetupTimerAttributes[]): Pmdr => {
+export const initializeTimerSet = (): Pmdr => {
   const attr: TimerSetAttributes = {
     sequentialTimers: [],
     currentIndex: 0,
