@@ -64,6 +64,20 @@ export const NotificationSettings: React.FC = ({
           <Switch
             checked={settings.isWebPushEnabled}
             onCheckedChange={async (checked: boolean) => {
+              if (settings.isNotificationsEnabled && checked) {
+                const permission = await Notification.requestPermission();
+                switch (permission) {
+                  case "granted":
+                    break;
+                  case "denied":
+                    alert(
+                      "Notifications have been blocked. Please enable them in your browser settings."
+                    );
+                    return;
+                  case "default":
+                    return;
+                }
+              }
               await onSettingsUpdate({
                 ...settings,
                 isWebPushEnabled: checked,
