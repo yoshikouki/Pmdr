@@ -3,21 +3,12 @@ const sw = self as unknown as ServiceWorkerGlobalScope; // we still need to over
 
 sw.addEventListener("install", (event) => {
   console.log("Installing Service Worker...", new Date().toLocaleTimeString());
-  event.waitUntil(
-    new Promise((resolve) => {
-      sw.skipWaiting();
-      console.log("Installed Service Worker.", new Date().toLocaleTimeString());
-    })
-  );
+  sw.skipWaiting();
+  event.waitUntil(sw.skipWaiting());
 });
 sw.addEventListener("activate", (event) => {
-  console.log("Activated Service Worker.", new Date().toLocaleTimeString());
-  event.waitUntil(
-    new Promise((resolve) => {
-      sw.clients.claim();
-      console.log("Activated Service Worker.", new Date().toLocaleTimeString());
-    })
-  );
+  console.log("Activating Service Worker.", new Date().toLocaleTimeString());
+  event.waitUntil(sw.clients.claim());
 });
 sw.addEventListener("fetch", (event) => {
   console.log("Fetching something...", new Date().toLocaleTimeString());
