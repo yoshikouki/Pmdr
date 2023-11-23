@@ -66,6 +66,7 @@ export const NotificationSettings: React.FC = ({
           </div>
           <Switch
             checked={settings.isWebPushEnabled}
+            disabled={!settings.isNotificationsEnabled}
             onCheckedChange={async (checked: boolean) => {
               if (checked) {
                 const isWebPushEnabled = await onWebPushPermission({
@@ -102,6 +103,7 @@ export const NotificationSettings: React.FC = ({
           </div>
           <Switch
             checked={settings.isInAppNotificationsEnabled}
+            disabled={!settings.isNotificationsEnabled}
             onCheckedChange={async (checked: boolean) => {
               await onSettingsUpdate({
                 ...settings,
