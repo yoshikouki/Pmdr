@@ -50,7 +50,7 @@ export const useNotification = () => {
         });
       }
     },
-    [isWebPushSupported]
+    [isWebPushSupported, onNotifyInApp]
   );
 
   const onNotify = useCallback(
