@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Paragraph } from "@/components/ui/typography";
+import { useNotification } from "@/hooks/use-notification";
 import { useUserSettings } from "@/hooks/use-user-settings";
 import { cn } from "@/lib/utils";
 
@@ -22,6 +23,7 @@ export const NotificationSettings: React.FC = ({
   ...props
 }: CardProps) => {
   const { settings, onSettingsUpdate } = useUserSettings();
+  const { onWebPushPermission } = useNotification();
 
   return (
     <Card className={cn(className)} {...props}>
@@ -64,24 +66,20 @@ export const NotificationSettings: React.FC = ({
           <Switch
             checked={settings.isWebPushEnabled}
             onCheckedChange={async (checked: boolean) => {
-              if (settings.isNotificationsEnabled && checked) {
-                const permission = await Notification.requestPermission();
-                switch (permission) {
-                  case "granted":
-                    break;
-                  case "denied":
-                    alert(
-                      "Notifications have been blocked. Please enable them in your browser settings."
-                    );
-                    return;
-                  case "default":
-                    return;
-                }
+              if (checked) {
+                const isWebPushEnabled = await onWebPushPermission({
+                  isWebPushEnabled: checked,
+                });
+                await onSettingsUpdate({
+                  ...settings,
+                  isWebPushEnabled,
+                });
+              } else {
+                await onSettingsUpdate({
+                  ...settings,
+                  isWebPushEnabled: checked,
+                });
               }
-              await onSettingsUpdate({
-                ...settings,
-                isWebPushEnabled: checked,
-              });
             }}
           />
         </div>
