@@ -23,7 +23,8 @@ export const NotificationSettings: React.FC = ({
   ...props
 }: CardProps) => {
   const { settings, onSettingsUpdate } = useUserSettings();
-  const { onWebPushPermission } = useNotification();
+  const { onWebPushPermission, onNotify, onNotifyViaWebPush, onNotifyInApp } =
+    useNotification();
 
   return (
     <Card className={cn(className)} {...props}>
@@ -70,9 +71,14 @@ export const NotificationSettings: React.FC = ({
                 const isWebPushEnabled = await onWebPushPermission({
                   isWebPushEnabled: checked,
                 });
+                if (!isWebPushEnabled) return;
                 await onSettingsUpdate({
                   ...settings,
                   isWebPushEnabled,
+                });
+                onNotifyViaWebPush({
+                  title: "Web Push Notifications Enabled",
+                  body: "You will now receive notifications through your web browser.",
                 });
               } else {
                 await onSettingsUpdate({
@@ -101,13 +107,28 @@ export const NotificationSettings: React.FC = ({
                 ...settings,
                 isInAppNotificationsEnabled: checked,
               });
+              if (checked) {
+                onNotifyInApp({
+                  title: "In-App Notifications Enabled",
+                  body: "You will now receive notifications while using the app.",
+                });
+              }
             }}
           />
         </div>
       </CardContent>
 
       <CardFooter>
-        <Button variant="outline" className="w-full">
+        <Button
+          onClick={async () => {
+            await onNotify({
+              title: "Test Notification",
+              body: "This is a test notification.",
+            });
+          }}
+          variant="outline"
+          className="w-full"
+        >
           <Check className="mr-2 h-4 w-4" /> Test
         </Button>
       </CardFooter>
