@@ -1,3 +1,4 @@
+import { useToast } from "@/components/ui/use-toast";
 import { UserSettings, initSettings } from "@pmdr/core/src/setting";
 import { useCallback } from "react";
 
@@ -13,11 +14,15 @@ const defaultNotificationOptions: NotificationOptions = {
 };
 
 export const useNotification = () => {
+  const { toast } = useToast();
   const isWebPushSupported = "Notification" in window;
 
-  const onNotifyInApp = useCallback(({ title, body }: NotificationContent) => {
-    alert(`${title}\n${body}`);
-  }, []);
+  const onNotifyInApp = useCallback(
+    ({ title, body }: NotificationContent) => {
+      toast({ title, description: body });
+    },
+    [toast]
+  );
 
   const onNotifyViaWebPush = useCallback(
     (content: NotificationContent, options?: NotificationOptions) => {

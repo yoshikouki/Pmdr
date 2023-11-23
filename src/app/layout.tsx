@@ -5,6 +5,7 @@ import "./globals.css";
 import { PmdrProvider } from "@/app/pmdr-provider";
 import { ThemeProvider } from "@/app/theme-provider";
 import { UserSettingsProvider } from "@/app/user-settings-provider";
+import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 import { MainNavigation } from "../components/main-navigation";
 import { Footer } from "./Footer";
@@ -85,6 +86,7 @@ export default function RootLayout({
               <MainNavigation />
             </PmdrProvider>
             <Footer />
+            <Toaster />
           </ThemeProvider>
         </body>
       </UserSettingsProvider>
