@@ -34,7 +34,13 @@ export const NotificationSettings: React.FC = ({
 
       <CardContent className="grid gap-4">
         <div className="flex items-center space-x-4">
-          <BellRing />
+          <BellRing
+            className={cn(
+              settings.isNotificationsEnabled
+                ? "text-primary fill-primary"
+                : "text-muted-foreground"
+            )}
+          />
           <div className="flex-1 space-y-1">
             <Paragraph className="leading-none">All Notifications</Paragraph>
             <Paragraph variant="muted" size="sm">
@@ -55,7 +61,13 @@ export const NotificationSettings: React.FC = ({
 
       <CardContent className="grid gap-4">
         <div className="flex items-center space-x-4">
-          <Vibrate />
+          <Vibrate
+            className={cn(
+              settings.isNotificationsEnabled && settings.isWebPushEnabled
+                ? "text-primary fill-primary"
+                : "text-muted-foreground"
+            )}
+          />
           <div className="flex-1 space-y-1">
             <Paragraph className="leading-none">
               Web Push Notifications
@@ -94,7 +106,14 @@ export const NotificationSettings: React.FC = ({
 
       <CardContent className="grid gap-4">
         <div className="flex items-center space-x-4">
-          <GalleryVerticalEnd />
+          <GalleryVerticalEnd
+            className={cn(
+              settings.isNotificationsEnabled &&
+                settings.isInAppNotificationsEnabled
+                ? "text-primary fill-primary"
+                : "text-muted-foreground"
+            )}
+          />
           <div className="flex-1 space-y-1">
             <Paragraph className="leading-none">In-App Notifications</Paragraph>
             <Paragraph variant="muted" size="sm">

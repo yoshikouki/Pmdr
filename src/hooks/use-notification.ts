@@ -15,7 +15,10 @@ const defaultNotificationOptions: NotificationOptions = {
 
 export const useNotification = () => {
   const { toast } = useToast();
-  const isWebPushSupported = "Notification" in window;
+  const isWebPushSupported = useCallback(
+    (): boolean => "Notification" in window,
+    []
+  );
 
   const onNotifyInApp = useCallback(
     ({ title, body }: NotificationContent) => {
@@ -26,7 +29,7 @@ export const useNotification = () => {
 
   const onNotifyViaWebPush = useCallback(
     (content: NotificationContent, options?: NotificationOptions) => {
-      if (!isWebPushSupported || Notification.permission !== "granted") {
+      if (!isWebPushSupported() || Notification.permission !== "granted") {
         console.error("This browser does not support desktop notification");
         return;
       }
@@ -69,7 +72,7 @@ export const useNotification = () => {
           case "granted":
             return true;
           case "denied":
-            await onNotifyInApp({
+            onNotify({
               title: "Notification permission denied",
               body: "Please enable notification permission in your browser",
             });
@@ -78,7 +81,7 @@ export const useNotification = () => {
             return false;
         }
       } catch (error) {
-        onNotify({
+        await onNotify({
           title: "Notification permission error",
           body: "It may be a browser that WebPush does not support.",
         });
