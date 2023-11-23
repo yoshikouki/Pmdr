@@ -1,3 +1,4 @@
+import { ToastProps } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import { UserSettings, initSettings } from "@pmdr/core/src/setting";
 import { useCallback } from "react";
@@ -21,8 +22,8 @@ export const useNotification = () => {
   );
 
   const onNotifyInApp = useCallback(
-    ({ title, body }: NotificationContent) => {
-      toast({ title, description: body });
+    ({ title, body, variant }: NotificationContent & ToastProps) => {
+      toast({ title, description: body, variant });
     },
     [toast]
   );
@@ -43,7 +44,10 @@ export const useNotification = () => {
   );
 
   const onNotify = useCallback(
-    async (content: NotificationContent, options?: NotificationOptions) => {
+    async (
+      content: NotificationContent & ToastProps,
+      options?: NotificationOptions
+    ) => {
       const settings = await initSettings();
       if (!settings.isNotificationsEnabled) return;
 
@@ -75,6 +79,7 @@ export const useNotification = () => {
             onNotify({
               title: "Notification permission denied",
               body: "Please enable notification permission in your browser",
+              variant: "destructive",
             });
             return false;
           case "default":
@@ -89,7 +94,7 @@ export const useNotification = () => {
         return false;
       }
     },
-    [onNotify, onNotifyInApp]
+    [onNotify]
   );
 
   return {
