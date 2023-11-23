@@ -32,16 +32,30 @@ export const ThemeSettings: React.FC = () => {
             className={cn("h-12 flex-grow")}
             aria-label="Change to light theme"
           >
-            <Sun className="mr-2" />
-            <span>Light</span>
+            <Sun
+              className={cn(
+                "mr-2",
+                theme === "light" && "text-primary fill-primary"
+              )}
+            />
+            <span className={cn(theme === "light" && "font-extrabold")}>
+              Light
+            </span>
           </ToggleGroupItem>
           <ToggleGroupItem
             value="dark"
             className={cn("h-12 flex-grow")}
             aria-label="Change to dark theme"
           >
-            <Moon className="mr-2" />
-            <span>Dark</span>
+            <Moon
+              className={cn(
+                "mr-2",
+                theme === "dark" && "text-primary fill-primary"
+              )}
+            />
+            <span className={cn(theme === "dark" && "font-extrabold")}>
+              Dark
+            </span>
           </ToggleGroupItem>
           <ToggleGroupItem
             value="system"
@@ -50,8 +64,15 @@ export const ThemeSettings: React.FC = () => {
             className={cn("h-12 flex-grow")}
             aria-label="Change to the theme in the device settings"
           >
-            <Smartphone className="mr-2" />
-            <span>Device</span>
+            <Smartphone
+              className={cn(
+                "mr-2",
+                theme === "system" && "text-primary fill-primary"
+              )}
+            />
+            <span className={cn(theme === "system" && "font-extrabold")}>
+              Device
+            </span>
           </ToggleGroupItem>
         </ToggleGroup>
       </CardContent>

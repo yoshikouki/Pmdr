@@ -22,7 +22,7 @@ export function ThemeSelector() {
         value="light"
         aria-label="Change to light theme"
       >
-        <Sun />
+        <Sun className={cn(theme === "light" && "text-primary fill-primary")} />
         <span className="sr-only">Change to light theme</span>
       </ToggleGroupItem>
       <ToggleGroupItem
@@ -30,7 +30,7 @@ export function ThemeSelector() {
         value="dark"
         aria-label="Change to dark theme"
       >
-        <Moon />
+        <Moon className={cn(theme === "dark" && "text-primary fill-primary")} />
         <span className="sr-only">Change to dark theme</span>
       </ToggleGroupItem>
       <ToggleGroupItem
@@ -38,7 +38,9 @@ export function ThemeSelector() {
         value="system"
         aria-label="Change to the theme in the device settings"
       >
-        <Smartphone />
+        <Smartphone
+          className={cn(theme === "system" && "text-primary fill-primary")}
+        />
         <span className="sr-only">
           Change to the theme in the device settings
         </span>
