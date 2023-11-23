@@ -17,7 +17,7 @@ const defaultNotificationOptions: NotificationOptions = {
 export const useNotification = () => {
   const { toast } = useToast();
   const isWebPushSupported = useCallback(
-    (): boolean => "Notification" in window,
+    () => "Notification" in window && "serviceWorker" in navigator,
     []
   );
 
@@ -29,16 +29,26 @@ export const useNotification = () => {
   );
 
   const onNotifyViaWebPush = useCallback(
-    (content: NotificationContent, options?: NotificationOptions) => {
+    async (content: NotificationContent, options?: NotificationOptions) => {
       if (!isWebPushSupported() || Notification.permission !== "granted") {
         console.error("This browser does not support desktop notification");
         return;
       }
-      new Notification(content.title, {
+      const notificationOptions = {
         ...defaultNotificationOptions,
         ...options,
         body: content.body,
-      });
+      };
+      const registration = await navigator.serviceWorker.getRegistration();
+      if (registration) {
+        await registration.showNotification(content.title, notificationOptions);
+      } else {
+        onNotifyInApp({
+          title: "Web Push Notification had an error",
+          body: "Please reload the page and try again.",
+          variant: "destructive",
+        });
+      }
     },
     [isWebPushSupported]
   );

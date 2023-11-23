@@ -89,7 +89,7 @@ export const NotificationSettings: React.FC = ({
                   ...settings,
                   isWebPushEnabled,
                 });
-                onNotifyViaWebPush({
+                await onNotifyViaWebPush({
                   title: "Web Push Notifications Enabled",
                   body: "You will now receive notifications through your web browser.",
                 });
