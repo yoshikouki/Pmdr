@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Paragraph } from "@/components/ui/typography";
+import { useFeedback } from "@/hooks/use-feedback";
 import { useNotification } from "@/hooks/use-notification";
 import { useUserSettings } from "@/hooks/use-user-settings";
 import { cn } from "@/lib/utils";
@@ -25,6 +26,7 @@ export const NotificationSettings: React.FC = ({
   const { settings, onSettingsUpdate } = useUserSettings();
   const { onWebPushPermission, onNotify, onNotifyViaWebPush, onNotifyInApp } =
     useNotification();
+  const { onFeedback } = useFeedback();
 
   return (
     <Card className={cn(className)} {...props}>
@@ -54,6 +56,7 @@ export const NotificationSettings: React.FC = ({
                 ...settings,
                 isNotificationsEnabled: checked,
               });
+              await onFeedback();
             }}
           />
         </div>
@@ -99,6 +102,7 @@ export const NotificationSettings: React.FC = ({
                   isWebPushEnabled: checked,
                 });
               }
+              await onFeedback();
             }}
           />
         </div>
@@ -134,6 +138,7 @@ export const NotificationSettings: React.FC = ({
                   body: "You will now receive notifications while using the app.",
                 });
               }
+              await onFeedback();
             }}
           />
         </div>
@@ -146,6 +151,7 @@ export const NotificationSettings: React.FC = ({
               title: "Test Notification",
               body: "This is a test notification.",
             });
+            await onFeedback();
           }}
           variant="outline"
           className="w-full"

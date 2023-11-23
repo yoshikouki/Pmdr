@@ -1,5 +1,6 @@
 import { AuthenticationSettings } from "./authentication-settings";
 import { NotificationSettings } from "./notification-settings";
+import { SoundSettings } from "./sound-settings";
 import { ThemeSettings } from "./theme-settings";
 
 export default function SettingsPage() {
@@ -11,6 +12,7 @@ export default function SettingsPage() {
       <div className="flex flex-col gap-10 max-w-md">
         <AuthenticationSettings />
         <NotificationSettings />
+        <SoundSettings />
         <ThemeSettings />
       </div>
     </main>

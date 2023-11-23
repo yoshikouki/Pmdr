@@ -1,17 +1,28 @@
+import { FeedbackSoundKeys } from "./feedback";
 import { addData, getById, updateData } from "./indexed-db";
 
 export type UserSettings = {
   id: string;
+  // Notification
   isNotificationsEnabled: boolean;
   isWebPushEnabled: boolean;
   isInAppNotificationsEnabled: boolean;
+  // Feedback
+  isSoundEnabled: boolean;
+  feedbackVolume: number;
+  feedbackSound: FeedbackSoundKeys;
 };
 
 export const initialSettings: UserSettings = {
   id: "nonlogin",
+  // Notification
   isNotificationsEnabled: true,
   isWebPushEnabled: false,
   isInAppNotificationsEnabled: true,
+  // Feedback
+  isSoundEnabled: true,
+  feedbackVolume: 100,
+  feedbackSound: "default",
 };
 
 export const getSettings = async (): Promise<UserSettings> => {
