@@ -1,15 +1,17 @@
-import { initSettings } from "./setting";
-
 type Feedbacks = {
   volume: number;
   sound: {
-    default: FeedbackSound;
+    default: FeedbackSoundOption;
   };
 };
 
-type FeedbackSound = {
+type FeedbackSoundOption = {
   id: FeedbackSoundKeys;
   path: string;
+};
+
+type FeedbackSound = {
+  play: () => Promise<void>;
 };
 
 export type FeedbackSoundKeys = keyof typeof feedbacks.sound;
@@ -27,28 +29,27 @@ export const feedbacks: Feedbacks = {
   },
 };
 
-export const playFeedbackSound = async () => {
-  const { isSoundEnabled, feedbackVolume, feedbackSoundPath } =
-    await getFeedbackSoundSettings();
-  if (!isSoundEnabled) return;
-  const audio = new Audio(feedbackSoundPath);
-  audio.volume = feedbackVolume / feedbackSoundVolumeMax;
-  await audio.play();
+export const initFeedbackSound = ({
+  isSoundEnabled,
+  feedbackVolume,
+  feedbackSound,
+}: {
+  isSoundEnabled: boolean;
+  feedbackVolume: number;
+  feedbackSound: FeedbackSoundKeys;
+}): FeedbackSound => {
+  if (!isSoundEnabled) {
+    return { play: async () => {} };
+  }
+  const feedbackSoundPath = getFeedbackSoundPath(feedbackSound);
+  const sound = new Audio(feedbackSoundPath);
+  sound.volume = isNaN(feedbackVolume / feedbackSoundVolumeMax)
+    ? 1
+    : feedbackVolume / feedbackSoundVolumeMax;
+  return sound;
 };
 
-const getFeedbackSoundSettings = async () => {
-  const { isSoundEnabled, feedbackVolume, feedbackSound } =
-    await initSettings();
-  const feedbackSoundId = feedbackSound ?? "default";
-  return {
-    isSoundEnabled: isSoundEnabled ?? true,
-    feedbackVolume: feedbackVolume ?? 100,
-    feedbackSound: feedbackSoundId,
-    feedbackSoundPath: getFeedbackSoundPath(feedbackSoundId),
-  };
-};
-
-const getFeedbackSoundPath = (soundId: FeedbackSoundKeys) => {
+export const getFeedbackSoundPath = (soundId: FeedbackSoundKeys) => {
   const sound = feedbacks.sound[soundId];
   if (!sound) return feedbacks.sound.default.path;
   return sound.path;
