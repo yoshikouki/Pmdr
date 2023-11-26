@@ -76,7 +76,7 @@ export default function RootLayout({
       <UserSettingsProvider>
         <body
           className={cn(
-            "min-h-screen bg-background antialiased",
+            "min-h-screen bg-background text-foreground antialiased",
             font.className
           )}
         >
