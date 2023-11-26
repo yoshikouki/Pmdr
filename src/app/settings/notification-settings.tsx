@@ -52,11 +52,11 @@ export const NotificationSettings: React.FC = ({
           <Switch
             checked={settings.isNotificationsEnabled}
             onCheckedChange={async (checked: boolean) => {
+              await onFeedback();
               await onSettingsUpdate({
                 ...settings,
                 isNotificationsEnabled: checked,
               });
-              await onFeedback();
             }}
           />
         </div>
@@ -83,6 +83,7 @@ export const NotificationSettings: React.FC = ({
             checked={settings.isWebPushEnabled}
             disabled={!settings.isNotificationsEnabled}
             onCheckedChange={async (checked: boolean) => {
+              await onFeedback();
               if (checked) {
                 const isWebPushEnabled = await onWebPushPermission({
                   isWebPushEnabled: checked,
@@ -102,7 +103,6 @@ export const NotificationSettings: React.FC = ({
                   isWebPushEnabled: checked,
                 });
               }
-              await onFeedback();
             }}
           />
         </div>
@@ -128,6 +128,7 @@ export const NotificationSettings: React.FC = ({
             checked={settings.isInAppNotificationsEnabled}
             disabled={!settings.isNotificationsEnabled}
             onCheckedChange={async (checked: boolean) => {
+              await onFeedback();
               await onSettingsUpdate({
                 ...settings,
                 isInAppNotificationsEnabled: checked,
@@ -138,7 +139,6 @@ export const NotificationSettings: React.FC = ({
                   body: "You will now receive notifications while using the app.",
                 });
               }
-              await onFeedback();
             }}
           />
         </div>
@@ -147,11 +147,11 @@ export const NotificationSettings: React.FC = ({
       <CardFooter>
         <Button
           onClick={async () => {
+            await onFeedback();
             await onNotify({
               title: "Test Notification",
               body: "This is a test notification.",
             });
-            await onFeedback();
           }}
           variant="outline"
           className="w-full"

@@ -3,17 +3,20 @@
 import { Moon, Smartphone, Sun } from "lucide-react";
 
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { useFeedback } from "@/hooks/use-feedback";
 import { useTheme } from "@/hooks/use-theme";
 import { cn } from "@/lib/utils";
 
 export function ThemeSelector() {
   const { setTheme, theme } = useTheme();
+  const { onFeedback } = useFeedback();
 
   return (
     <ToggleGroup
       type="single"
       value={theme}
-      onValueChange={(value) => {
+      onValueChange={async (value) => {
+        await onFeedback();
         if (value) setTheme(value);
       }}
     >

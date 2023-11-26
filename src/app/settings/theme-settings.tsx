@@ -4,12 +4,14 @@ import { Moon, Smartphone, Sun } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { useFeedback } from "@/hooks/use-feedback";
 import { useTheme } from "@/hooks/use-theme";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 
 export const ThemeSettings: React.FC = () => {
   const { theme, setTheme } = useTheme();
+  const { onFeedback } = useFeedback();
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
@@ -23,7 +25,8 @@ export const ThemeSettings: React.FC = () => {
           className="w-full justify-between"
           type="single"
           value={mounted ? theme : undefined}
-          onValueChange={(value) => {
+          onValueChange={async (value) => {
+            await onFeedback();
             if (value) setTheme(value);
           }}
         >
