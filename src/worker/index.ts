@@ -11,8 +11,25 @@ sw.addEventListener("activate", (event) => {
   event.waitUntil(sw.clients.claim());
 });
 sw.addEventListener("fetch", (event) => {
-  console.log("Fetching something...", new Date().toLocaleTimeString());
-  return fetch(event.request);
+  console.log("Fetching", event.request.url, new Date().toLocaleTimeString());
+  if (event.request.url.includes("/se/")) {
+    event.respondWith(
+      (async () => {
+        const cachedResponse = await caches.match(event.request);
+        if (cachedResponse) {
+          return cachedResponse;
+        }
+
+        const cache = await caches.open("v1");
+        const response = await fetch(event.request);
+        cache.put(event.request, response.clone());
+        return response;
+      })()
+    );
+  } else {
+    // それ以外のリクエストは、通常通りfetchする
+    return fetch(event.request);
+  }
 });
 
 sw.addEventListener("message", (event) => {

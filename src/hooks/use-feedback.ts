@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 
 import { initFeedbackSound } from "@pmdr/core/src/feedback";
 import { useUserSettings } from "./use-user-settings";
@@ -6,21 +6,18 @@ import { useUserSettings } from "./use-user-settings";
 export const useFeedback = () => {
   const { settings } = useUserSettings();
 
-  const feedbackAudio = useMemo(() => {
-    return initFeedbackSound({
+  const onFeedback = useCallback(async () => {
+    const feedbackAudio = initFeedbackSound({
       isSoundEnabled: settings.isSoundEnabled,
       feedbackVolume: settings.feedbackVolume,
       feedbackSound: settings.feedbackSound,
     });
-  }, [
-    settings.isSoundEnabled,
-    settings.feedbackVolume,
-    settings.feedbackSound,
-  ]);
-
-  const onFeedback = useCallback(async () => {
     await feedbackAudio.play();
-  }, [feedbackAudio]);
+  }, [
+    settings.feedbackSound,
+    settings.feedbackVolume,
+    settings.isSoundEnabled,
+  ]);
 
   return {
     onFeedback,
